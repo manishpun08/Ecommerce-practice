@@ -1,44 +1,65 @@
-import React from "react";
-import { Field, Formik } from "formik";
-import * as Yup from "yup";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Box,
   Button,
   FormControl,
   FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
+  LinearProgress,
   MenuItem,
   OutlinedInput,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import { Formik } from "formik";
+import React from "react";
+import { useMutation } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import $axios from "../lib/axios.instance";
 
 const Register = () => {
-  const minDate = dayjs()
-    .startOf("day")
-    .subtract(18, "year")
-    .format("DD/MM/YYYY");
+  // using navigate
+  const navigate = useNavigate();
 
-  console.log(minDate);
+  // Calculate min date
+  const minDate = dayjs();
 
+  // hide and show password
   const [showPassword, setShowPassword] = React.useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  // api hit
+  const { isLoading, isError, error, mutate } = useMutation({
+    mutationKey: ["register-user"],
+    mutationFn: async (values) => {
+      return await $axios.post("/user/register", values);
+    },
+    // on success
+    onSuccess: (response) => {
+      console.log(response);
+      navigate("/login");
+    },
+
+    // on error
+    onError: (error) => {
+      console.log(error?.response?.data?.message);
+    },
+  });
+
   return (
-    <>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      {isLoading && <LinearProgress color="success" />}
       <Formik
         initialValues={{
           firstName: "",
@@ -83,7 +104,9 @@ const Register = () => {
             .trim(),
         })}
         onSubmit={(values) => {
-          console.log(values);
+          values.dob = null;
+          values.gender = null;
+          mutate(values);
         }}
       >
         {(formik) => (
@@ -95,7 +118,7 @@ const Register = () => {
               gap: "1rem",
               padding: "2rem",
               boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              minWidth: "300px",
+              width: "300px",
               borderRadius: "10px",
             }}
           >
@@ -205,21 +228,27 @@ const Register = () => {
                 <FormHelperText error>{formik.errors.gender}</FormHelperText>
               ) : null}
             </FormControl>
-
+            {/* dob */}
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="DOB"
-                    disableFuture
-                    onChange={(event) => {
-                      formik.setFieldValue(
-                        "dob",
-                        dayjs(event).format("DD/MM/YYYY")
-                      );
-                    }}
-                  />
-                </DemoContainer>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  label="DOB"
+                  disableFuture
+                  minDate={minDate} // Set minimum date
+                  value={
+                    formik.values.dob
+                      ? dayjs(formik.values.dob, "DD/MM/YYYY")
+                      : null
+                  } // Convert dob value to Date object
+                  onChange={(date) => {
+                    formik.setFieldValue(
+                      "dob",
+                      dayjs(date).format("DD/MM/YYYY")
+                    );
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
               </LocalizationProvider>
               {formik.touched.dob && formik.errors.dob ? (
                 <FormHelperText error>{formik.errors.dob}</FormHelperText>
@@ -249,7 +278,7 @@ const Register = () => {
           </form>
         )}
       </Formik>
-    </>
+    </Box>
   );
 };
 
