@@ -40,7 +40,13 @@ const LogoutConfirmationDialog = () => {
         </DialogTitle>
 
         <DialogActions>
-          <Button variant="contained" color="primary" onClick={() => {}}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handleClose();
+            }}
+          >
             <Typography>No</Typography>
           </Button>
           <Button

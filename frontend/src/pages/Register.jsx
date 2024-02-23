@@ -55,7 +55,8 @@ const Register = () => {
     onError: (error) => {
       console.log(error?.response?.data?.message);
     },
-  });
+  }
+  );
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>

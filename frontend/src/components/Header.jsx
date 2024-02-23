@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
+import CustomAvatar from "./CustomAvatar";
 const drawerWidth = 240;
 const navItems = [
   {
@@ -112,6 +113,7 @@ const Header = (props) => {
               </Button>
             ))}
           </Box>
+          <CustomAvatar />
           <LogoutConfirmationDialog />
         </Toolbar>
       </AppBar>

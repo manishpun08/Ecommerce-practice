@@ -16,7 +16,6 @@ const BuyerProductList = () => {
   });
 
   //   header bata  producl list leuna lai
-
   const productList = data?.data?.productList;
 
   //   loading
@@ -26,7 +25,7 @@ const BuyerProductList = () => {
   return (
     <Box sx={{ display: "flex", gap: "1rem" }}>
       {productList.map((item) => {
-        return <ProductCard key={item._id} />;
+        return <ProductCard key={item._id} {...item} />;
       })}
     </Box>
   );

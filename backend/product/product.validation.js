@@ -33,7 +33,8 @@ export let addProductValidationSchema = Yup.object({
   freeShipping: Yup.boolean().default(false),
   description: Yup.string()
     .required("Description is required.")
-    .max(1000, "Description is at most of 1000.")
+    .min(500, "Description is at least of 500 character.")
+    .max(1000, "Description is at most of 1000 character.")
     .trim(),
-  image: Yup.string().required("Image is required.").trim(),
+  image: Yup.string().trim().nullable(),
 });

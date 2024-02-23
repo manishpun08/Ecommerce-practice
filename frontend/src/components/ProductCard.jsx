@@ -6,8 +6,10 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Chip, Stack } from "@mui/material";
+import { fallbackImage } from "../constant/general.constant";
 
-const ProductCard = () => {
+const ProductCard = (props) => {
+  console.log(props);
   return (
     <Card
       sx={{
@@ -17,16 +19,16 @@ const ProductCard = () => {
       }}
     >
       <CardMedia
-        sx={{ height: 140, marginTop: "7px" }}
-        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeAPDq_YRBO8SE1r_HnSVlPEotP_RLWGkG1w&usqp=CAU"
-        title="product Tv"
+        sx={{ height: "300px", marginTop: "7px" }}
+        image={props.image || fallbackImage}
+        title={props.name}
       />
       <CardContent>
         <Stack direction="row" justifyContent="space-between">
           <Typography gutterBottom variant="h5" component="div">
-            F55
+            {props.name}
           </Typography>
-          <Chip label="samsung" variant="outlined" color="secondary" />
+          <Chip label={props.brand} variant="outlined" color="secondary" />
         </Stack>
 
         <Typography
@@ -34,10 +36,7 @@ const ProductCard = () => {
           color="text.secondary"
           textAlign={"justify"}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum minima
-          quasi aliquam omnis deserunt commodi temporibus inventore in iure.
-          Velit eaque neque necessitatibus nulla nihil eius exercitationem
-          soluta similique harum!{" "}
+          {props.description.trim()}....
         </Typography>
       </CardContent>
       <CardActions>
