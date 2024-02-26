@@ -3,15 +3,14 @@ import React from "react";
 import ProductCard from "../components/ProductCard";
 import { useQuery } from "react-query";
 import $axios from "../lib/axios.instance";
+import Loader from "../components/Loader";
+import { getBuyerProducts } from "../lib/apis";
 
 const BuyerProductList = () => {
   const { isLoading, isError, error, data } = useQuery({
     queryKey: "buyer-product-list",
     queryFn: async () => {
-      return await $axios.post("/product/list/buyer", {
-        page: 1,
-        limit: 10,
-      });
+      return await getBuyerProducts();
     },
   });
 
@@ -20,10 +19,10 @@ const BuyerProductList = () => {
 
   //   loading
   if (isLoading) {
-    return <CircularProgress color="secondary" />;
+    return <Loader />;
   }
   return (
-    <Box sx={{ display: "flex", gap: "1rem" }}>
+    <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
       {productList.map((item) => {
         return <ProductCard key={item._id} {...item} />;
       })}

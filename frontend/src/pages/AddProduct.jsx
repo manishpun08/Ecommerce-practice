@@ -26,6 +26,8 @@ const AddProduct = () => {
 
   const { isLoading, mutate } = useMutation({
     mutationKey: "add-product",
+
+    // api hit function
     mutationFn: addProduct,
 
     // success vayepaxi

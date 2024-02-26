@@ -9,14 +9,7 @@ const ProductList = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          gap: "2rem",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
+      <Box>
         {userRole === "buyer" ? <BuyerProductList /> : <SellerProductList />}
       </Box>
     </>

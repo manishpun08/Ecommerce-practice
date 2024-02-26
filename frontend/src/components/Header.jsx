@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 import CustomAvatar from "./CustomAvatar";
+import { Container } from "@mui/material";
 const drawerWidth = 240;
 const navItems = [
   {
@@ -81,62 +82,64 @@ const Header = (props) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar component="nav" sx={{ background: "green" }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+      <Container maxWidth>
+        <CssBaseline />
+        <AppBar component="nav" sx={{ background: "green" }}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            >
+              Nepal Mart
+            </Typography>
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              {navItems.map((item) => (
+                <Button
+                  key={item.id}
+                  sx={{ color: "#fff" }}
+                  onClick={() => {
+                    navigate(item.path);
+                  }}
+                >
+                  {item.name}
+                </Button>
+              ))}
+            </Box>
+            <CustomAvatar />
+            <LogoutConfirmationDialog />
+          </Toolbar>
+        </AppBar>
+        <nav>
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            Nepal Mart
-          </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button
-                key={item.id}
-                sx={{ color: "#fff" }}
-                onClick={() => {
-                  navigate(item.path);
-                }}
-              >
-                {item.name}
-              </Button>
-            ))}
-          </Box>
-          <CustomAvatar />
-          <LogoutConfirmationDialog />
-        </Toolbar>
-      </AppBar>
-      <nav>
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </nav>
+            {drawer}
+          </Drawer>
+        </nav>
+      </Container>
     </Box>
   );
 };

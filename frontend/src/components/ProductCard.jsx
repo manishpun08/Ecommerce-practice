@@ -7,19 +7,30 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Chip, Stack } from "@mui/material";
 import { fallbackImage } from "../constant/general.constant";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
-  console.log(props);
+  const navigate = useNavigate();
+
   return (
     <Card
       sx={{
-        width: "25%",
+        width: "23%",
         boxShadow:
           "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
       }}
     >
       <CardMedia
-        sx={{ height: "300px", marginTop: "7px" }}
+        onClick={() => {
+          navigate(`/productDetails/${props._id}`);
+        }}
+        sx={{
+          width: "100%",
+          cursor: "pointer",
+          height: "300px",
+          objectFit: "contain",
+          marginTop: "7px",
+        }}
         image={props.image || fallbackImage}
         title={props.name}
       />
@@ -40,7 +51,14 @@ const ProductCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button fullWidth variant="contained" color="success">
+        <Button
+          fullWidth
+          variant="contained"
+          color="success"
+          onClick={() => {
+            navigate(`/productDetails/${props._id}`);
+          }}
+        >
           Explore
         </Button>
       </CardActions>

@@ -4,3 +4,7 @@
   place-items: center;
   min-height: 100vh;
 }
+
+.css-mhc70k-MuiGrid-root > .MuiGrid-item {
+  padding-top: 0 !important;
+}
