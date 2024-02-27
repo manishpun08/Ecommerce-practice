@@ -82,7 +82,7 @@ const Header = (props) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Container maxWidth>
+      <Container>
         <CssBaseline />
         <AppBar component="nav" sx={{ background: "green" }}>
           <Toolbar>
