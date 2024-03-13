@@ -9,6 +9,7 @@ import Product from "./product.model.js";
 import mongoose from "mongoose";
 import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 import { paginationValidationSchema } from "../utils/pagination.validation.js";
+import Cart from "../cart /cart.model.js";
 
 const router = express.Router();
 
@@ -78,6 +79,9 @@ router.delete(
     }
     // delete product
     await Product.deleteOne({ _id: productId });
+
+    // delete cart
+    await Cart.deleteMany({ productId });
     // send proper response
     return res
       .status(200)
@@ -168,7 +172,7 @@ router.post(
           name: 1,
           brand: 1,
           price: 1,
-          description: { $substr: ["$description", 0, 200] },
+          description: { $substr: ["$description", 0, 150] },
           image: 1,
         },
       },
@@ -220,7 +224,7 @@ router.post(
           name: 1,
           brand: 1,
           price: 1,
-          description: { $substr: ["$description", 0, 200] },
+          description: { $substr: ["$description", 0, 150] },
           image: 1,
         },
       },

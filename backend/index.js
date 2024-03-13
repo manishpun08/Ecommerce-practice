@@ -13,6 +13,7 @@ app.use(express.json());
 
 // cors
 app.use(cors());
+
 // connect DB
 connectDB();
 
@@ -20,6 +21,7 @@ connectDB();
 app.use(userRoutes);
 app.use(productRoutes);
 app.use(cartRoutes);
+
 // port and server
 const PORT = 8008;
 
