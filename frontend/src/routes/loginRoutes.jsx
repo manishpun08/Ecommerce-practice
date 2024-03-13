@@ -2,6 +2,7 @@ import MainLayout from "../Layout/MainLayout";
 import EditProduct from "../components/EditProduct";
 import About from "../pages/About";
 import AddProduct from "../pages/AddProduct";
+import Cart from "../pages/Cart";
 import Contact from "../pages/Contact";
 import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
@@ -39,6 +40,10 @@ const loginRoutes = [
       {
         path: "product/edit/:id",
         element: <EditProduct />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },

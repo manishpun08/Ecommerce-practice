@@ -19,6 +19,20 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 import CustomAvatar from "./CustomAvatar";
 import { Container } from "@mui/material";
+import Badge from "@mui/material/Badge";
+import { styled } from "@mui/material/styles";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useQuery } from "react-query";
+import $axios from "../lib/axios.instance";
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
 const drawerWidth = 240;
 const navItems = [
   {
@@ -31,19 +45,22 @@ const navItems = [
     name: "Product",
     path: "/product",
   },
-  {
-    id: 3,
-    name: "About",
-    path: "/about",
-  },
-  {
-    id: 4,
-    name: "Contact",
-    path: "/contact",
-  },
 ];
 
 const Header = (props) => {
+  const userRole = localStorage.getItem("userRole");
+
+  // get cart Item count
+  const { isLoading, isError, error, data } = useQuery({
+    queryKey: ["get-cart-item-count"],
+    queryFn: async () => {
+      return await $axios.get("/cart/item/count");
+    },
+    enabled: userRole === "buyer",
+  });
+
+  const itemCount = data?.data?.itemCount;
+
   // navigate menu
   const navigate = useNavigate();
 
@@ -84,7 +101,7 @@ const Header = (props) => {
     <Box sx={{ display: "flex" }}>
       <Container>
         <CssBaseline />
-        <AppBar component="nav" sx={{ background: "green" }}>
+        <AppBar component="nav" sx={{ background: "#F875AA" }}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -115,7 +132,20 @@ const Header = (props) => {
                 </Button>
               ))}
             </Box>
+            {/* cart  */}
+            {userRole === "buyer" && (
+              <IconButton
+                onClick={() => navigate("/cart")}
+                sx={{ color: "#fff", marginRight: "1.5rem", cursor: "pointer" }}
+              >
+                <StyledBadge badgeContent={itemCount} color="secondary">
+                  <ShoppingCartIcon />
+                </StyledBadge>
+              </IconButton>
+            )}
+            {/* user avatar */}
             <CustomAvatar />
+            {/* logout  */}
             <LogoutConfirmationDialog />
           </Toolbar>
         </AppBar>

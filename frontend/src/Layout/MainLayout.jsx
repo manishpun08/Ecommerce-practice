@@ -11,6 +11,7 @@ const MainLayout = () => {
       <Box
         sx={{
           display: "flex",
+          width: "100%",
           justifyContent: "center",
           alignItems: "center",
           margin: "6rem 0",

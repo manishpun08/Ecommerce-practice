@@ -27,8 +27,8 @@ const ProductCard = (props) => {
         sx={{
           width: "100%",
           cursor: "pointer",
-          height: "300px",
-          objectFit: "contain",
+          height: "200px",
+          objectFit: "cover",
           marginTop: "7px",
         }}
         image={props.image || fallbackImage}
@@ -54,7 +54,7 @@ const ProductCard = (props) => {
         <Button
           fullWidth
           variant="contained"
-          color="success"
+          color="secondary"
           onClick={() => {
             navigate(`/productDetails/${props._id}`);
           }}

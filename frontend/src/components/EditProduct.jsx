@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { productCategories } from "../constant/general.constant";
 import {
@@ -18,8 +18,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import Loader from "./Loader";
 import $axios from "../lib/axios.instance";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import axios from "axios";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const EditProduct = () => {
+  const [productImage, setProductImage] = useState(null);
+  const [localUrl, setLocalUrl] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
+
   const params = useParams();
 
   const navigate = useNavigate();
@@ -96,7 +115,32 @@ const EditProduct = () => {
 
           image: Yup.string().trim().nullable(),
         })}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
+          let imageUrl;
+
+          const cloudname = "du65q3gjv";
+          const data = new FormData();
+
+          data.append("file", productImage);
+          data.append("upload_preset", "nepal_mart");
+          data.append("cloud_name", cloudname);
+
+          if (productImage) {
+            try {
+              setImageLoading(true);
+              const res = await axios.post(
+                `https://api.cloudinary.com/v1_1/${cloudname}/upload
+              `,
+                data
+              );
+              setImageLoading(false);
+              imageUrl = res?.data?.secure_url;
+            } catch (error) {
+              setImageLoading(false);
+              console.log("image upload failed...");
+            }
+          }
+          values.image = imageUrl;
           mutate(values);
         }}
       >
@@ -116,7 +160,30 @@ const EditProduct = () => {
             <Typography variant="h5" textAlign="center">
               Edit Product
             </Typography>
-
+            {productImage && (
+              <Stack sx={{ height: "300px" }}>
+                <img src={localUrl} style={{ height: "100%" }} />
+              </Stack>
+            )}
+            <FormControl>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(event) => {
+                    const file = event?.target?.files[0];
+                    setProductImage(file);
+                    setLocalUrl(URL.createObjectURL(file));
+                  }}
+                />
+              </Button>
+            </FormControl>
             <FormControl>
               <TextField label="Name" {...getFieldProps("name")} />
               {touched.name && errors.name ? (
