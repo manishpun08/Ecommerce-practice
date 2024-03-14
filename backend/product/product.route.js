@@ -177,9 +177,11 @@ router.post(
         },
       },
     ]);
+    const totalProducts = await Product.find().countDocuments();
+    const numberOfPages = Math.ceil(totalProducts / limit);
     return res
       .status(200)
-      .send({ message: "success", productList: productList });
+      .send({ message: "success", productList: productList, numberOfPages });
   }
 );
 
@@ -229,9 +231,11 @@ router.post(
         },
       },
     ]);
+    const totalProducts = await Product.find().countDocuments();
+    const numberOfPages = Math.ceil(totalProducts / limit);
     return res
       .status(200)
-      .send({ message: "success", productList: productList });
+      .send({ message: "success", productList: productList, numberOfPages });
   }
 );
 
