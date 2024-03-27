@@ -157,14 +157,19 @@ router.post(
   // pagination function
   async (req, res) => {
     // extract pagination data from req.body
-    const { page, limit } = req.body;
+    const { page, limit, searchText } = req.body;
+
+    let match = {};
+    if (searchText) {
+      match = { name: { $regex: searchText, $options: "i" } };
+    }
 
     // calculate skip
     const skip = (page - 1) * limit;
 
     //run query
     const productList = await Product.aggregate([
-      { $match: {} },
+      { $match: match },
       { $skip: skip },
       { $limit: limit },
       {
@@ -177,7 +182,7 @@ router.post(
         },
       },
     ]);
-    const totalProducts = await Product.find().countDocuments();
+    const totalProducts = await Product.find(match).countDocuments();
     const numberOfPages = Math.ceil(totalProducts / limit);
     return res
       .status(200)
@@ -211,7 +216,14 @@ router.post(
   // pagination function
   async (req, res) => {
     // extract pagination data from req.body
-    const { page, limit } = req.body;
+    const { page, limit, searchText } = req.body;
+    // console.log(req.body);
+
+    // todo for searching item
+    let match = {};
+    if (searchText) {
+      match = { name: { $regex: searchText, $options: "i" } };
+    }
 
     // calculate skip
     const skip = (page - 1) * limit;
@@ -231,8 +243,10 @@ router.post(
         },
       },
     ]);
+
     const totalProducts = await Product.find().countDocuments();
     const numberOfPages = Math.ceil(totalProducts / limit);
+
     return res
       .status(200)
       .send({ message: "success", productList: productList, numberOfPages });

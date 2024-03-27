@@ -18,13 +18,16 @@ import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import $axios from "../lib/axios.instance";
+import { useDispatch } from "react-redux";
+import { openErrorSnackbar } from "../store/slices/snackbarSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   // using navigate
   const navigate = useNavigate();
 
   // api hit
-  const { isLoading, isError, error, mutate } = useMutation({
+  const { isLoading, mutate } = useMutation({
     mutationKey: "login-user",
     mutationFn: async (values) => {
       return await $axios.post("/user/login", values);
@@ -44,6 +47,7 @@ const Login = () => {
     // on error
     onError: (error) => {
       console.log(error?.response?.data?.message);
+      // dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 

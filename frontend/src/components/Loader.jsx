@@ -3,7 +3,7 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <Box>
+    <Box textAlign="center">
       <img src="/gif/loader.gif" alt="loader" />
     </Box>
   );

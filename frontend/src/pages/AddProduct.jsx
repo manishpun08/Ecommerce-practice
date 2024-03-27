@@ -22,6 +22,12 @@ import { addProduct } from "../lib/apis";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
+import Loader from "../components/Loader";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -37,6 +43,8 @@ const VisuallyHiddenInput = styled("input")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const AddProduct = () => {
+  const dispatch = useDispatch();
+
   const [productImage, setProductImage] = useState(null);
   const [localUrl, setLocalUrl] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -52,16 +60,20 @@ const AddProduct = () => {
     // success vayepaxi
     onSuccess: (response) => {
       navigate("/product");
+      dispatch(openSuccessSnackbar(response?.data?.message));
     },
 
     // error aayepaxi
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
+  if (isLoading || imageLoading) {
+    return <Loader />;
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      {(isLoading || imageLoading) && <LinearProgress color="success" />}
       <Formik
         initialValues={{
           name: "",
@@ -69,7 +81,7 @@ const AddProduct = () => {
           price: 0,
           quantity: 1,
           category: "",
-          freeShipping: "",
+          freeShipping: false,
           description: "",
           image: null,
         }}
@@ -105,11 +117,13 @@ const AddProduct = () => {
         onSubmit={async (values) => {
           let imageUrl;
 
-          const cloudname = "du65q3gjv";
+          const cloudname = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+          const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
           const data = new FormData();
 
           data.append("file", productImage);
-          data.append("upload_preset", "nepal_mart");
+          data.append("upload_preset", upload_preset);
           data.append("cloud_name", cloudname);
 
           if (productImage) {

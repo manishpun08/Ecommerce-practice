@@ -24,9 +24,12 @@ import { useMutation, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
 import { fallbackImage } from "../constant/general.constant";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { openErrorSnackbar } from "../store/slices/snackbarSlice";
 
 const CartTable = ({ cartItem }) => {
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
 
   // for removing single cart item
   const { isLoading: removeItemLoading, mutate } = useMutation({
@@ -71,7 +74,8 @@ const CartTable = ({ cartItem }) => {
       queryClient.invalidateQueries("get-cart-items");
     },
     onError: (error) => {
-      console.log("error");
+      // console.log("error");
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
   return (

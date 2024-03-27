@@ -25,14 +25,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useQuery } from "react-query";
 import $axios from "../lib/axios.instance";
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    right: -3,
-    top: 13,
-    border: `2px solid ${theme.palette.background.paper}`,
-    padding: "0 4px",
-  },
-}));
 const drawerWidth = 240;
 const navItems = [
   {
@@ -138,9 +130,9 @@ const Header = (props) => {
                 onClick={() => navigate("/cart")}
                 sx={{ color: "#fff", marginRight: "1.5rem", cursor: "pointer" }}
               >
-                <StyledBadge badgeContent={itemCount} color="secondary">
+                <Badge badgeContent={itemCount} color="secondary">
                   <ShoppingCartIcon />
-                </StyledBadge>
+                </Badge>
               </IconButton>
             )}
             {/* user avatar */}
@@ -149,6 +141,7 @@ const Header = (props) => {
             <LogoutConfirmationDialog />
           </Toolbar>
         </AppBar>
+
         <nav>
           <Drawer
             container={container}

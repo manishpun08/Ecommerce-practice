@@ -20,6 +20,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
 import { useMutation, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +61,8 @@ function a11yProps(index) {
 
 // main function
 const ProductDescription = (props) => {
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
@@ -68,7 +75,6 @@ const ProductDescription = (props) => {
   };
 
   const params = useParams();
-  console.log(params);
 
   const [count, setCount] = useState(1);
 
@@ -88,6 +94,7 @@ const ProductDescription = (props) => {
     setCount((prevCount) => prevCount - 1);
   };
 
+  // add to cart
   const { isLoading, mutate } = useMutation({
     mutationKey: ["add-product-to-cart"],
     mutationFn: async () => {
@@ -96,11 +103,13 @@ const ProductDescription = (props) => {
         oderQuantity: count,
       });
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries("get-cart-item-count");
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      console.log("error");
+      // console.log("error");
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 
@@ -113,8 +122,7 @@ const ProductDescription = (props) => {
           aria-label="basic tabs example"
         >
           <Tab label="Description" {...a11yProps(0)} />
-          <Tab label="Reviews" {...a11yProps(1)} />
-          <Tab label="Return or Exchange" {...a11yProps(2)} />
+          <Tab label="Return or Exchange" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -122,9 +130,6 @@ const ProductDescription = (props) => {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        Item Three
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
         No returns only exchange within 7 days of purchase. Packaging should be
         intact.
       </CustomTabPanel>

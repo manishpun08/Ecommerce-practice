@@ -21,6 +21,11 @@ import $axios from "../lib/axios.instance";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -35,6 +40,8 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const EditProduct = () => {
+  const dispatch = useDispatch();
+
   const [productImage, setProductImage] = useState(null);
   const [localUrl, setLocalUrl] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -62,9 +69,10 @@ const EditProduct = () => {
     },
     onSuccess: (res) => {
       navigate(`/productDetails/${params.id}`);
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 
@@ -118,11 +126,13 @@ const EditProduct = () => {
         onSubmit={async (values) => {
           let imageUrl;
 
-          const cloudname = "du65q3gjv";
+          const cloudname = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+          const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
           const data = new FormData();
 
           data.append("file", productImage);
-          data.append("upload_preset", "nepal_mart");
+          data.append("upload_preset", upload_preset);
           data.append("cloud_name", cloudname);
 
           if (productImage) {
@@ -160,11 +170,16 @@ const EditProduct = () => {
             <Typography variant="h5" textAlign="center">
               Edit Product
             </Typography>
-            {productImage && (
-              <Stack sx={{ height: "300px" }}>
-                <img src={localUrl} style={{ height: "100%" }} />
-              </Stack>
-            )}
+            {/* cloudniary image  */}
+            <Stack sx={{ height: "250px" }}>
+              {(localUrl || productDetails?.image) && (
+                <img
+                  src={localUrl || productDetails?.image}
+                  style={{ height: "100%" }}
+                  alt={productDetails?.name}
+                />
+              )}
+            </Stack>
             <FormControl>
               <Button
                 component="label"
