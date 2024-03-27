@@ -12,7 +12,13 @@ const app = express();
 app.use(express.json());
 
 // cors
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 // connect DB
 connectDB();
